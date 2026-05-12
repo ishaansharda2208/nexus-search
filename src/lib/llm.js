@@ -64,11 +64,11 @@ async function queryClaudeAPI(apiKey, userQuery) {
 
 // ── OpenAI ───────────────────────────────────────────────────────────────────
 async function queryOpenAIAPI(apiKey, userQuery) {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch("/api/openai", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      "x-openai-key": apiKey,
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
