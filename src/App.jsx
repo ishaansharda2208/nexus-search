@@ -32,6 +32,10 @@ export default function App() {
     reset();
   };
 
+  if (!credentials) {
+    return <SetupScreen onComplete={setCredentials} />;
+  }
+
   return (
     <div className="app">
       {/* Header */}
