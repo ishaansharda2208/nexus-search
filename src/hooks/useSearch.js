@@ -9,7 +9,7 @@ async function callGroq(query) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-groq-key": "server" },
     body: JSON.stringify({
-      model: "llama3-8b-8192",
+      model: "llama-3.1-8b-instant",
       max_tokens: 256,
       messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: query }],
       response_format: { type: "json_object" },
