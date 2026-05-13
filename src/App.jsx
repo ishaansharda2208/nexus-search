@@ -1,44 +1,20 @@
-// ─── App ──────────────────────────────────────────────────────────────────────
-import { useState } from "react";
-import { SetupScreen } from "./components/SetupScreen";
+import { useSearch } from "./hooks/useSearch";
 import { SearchBar } from "./components/SearchBar";
 import { ResultsPanel } from "./components/ResultsPanel";
-import { useSearch } from "./hooks/useSearch";
 import { TOTAL_COUNT } from "./data/products";
 import "./styles.css";
 
+const CREDENTIALS = { provider: "groq", apiKey: "server" };
+
 export default function App() {
-  const [credentials, setCredentials] = useState(null);
-
   const {
-    search,
-    reset,
-    status,
-    results,
-    appliedFilters,
-    ignoredFilters,
-    searchTerm,
-    llmResponse,
-    error,
-    lastQuery,
-    isLoading,
-    isIdle,
-    isSuccess,
-    isError,
-  } = useSearch(credentials || {});
-
-  const handleDisconnect = () => {
-    setCredentials(null);
-    reset();
-  };
-
-  if (!credentials) {
-    return <SetupScreen onComplete={setCredentials} />;
-  }
+    search, reset, results, appliedFilters, ignoredFilters,
+    searchTerm, llmResponse, error, lastQuery,
+    isLoading, isIdle, isSuccess, isError,
+  } = useSearch(CREDENTIALS);
 
   return (
     <div className="app">
-      {/* Header */}
       <header className="app-header">
         <div className="header-inner">
           <div className="header-brand">
@@ -46,21 +22,16 @@ export default function App() {
             <span className="logo-text">Nexus</span>
             <span className="header-tagline">AI Product Search</span>
           </div>
-
           <div className="header-right">
             <div className="provider-pill">
               <span className="provider-dot" />
-              {credentials.provider === "claude" ? "Claude" : "GPT-4o"}
+              Powered by Groq
             </div>
             <span className="catalog-pill">{TOTAL_COUNT.toLocaleString()} products</span>
-            <button className="disconnect-btn" onClick={handleDisconnect}>
-              Disconnect
-            </button>
           </div>
         </div>
       </header>
 
-      {/* Hero + Search */}
       <section className="search-section">
         {isIdle && (
           <div className="hero-text">
@@ -68,16 +39,9 @@ export default function App() {
             <p>Describe what you're looking for in plain English.</p>
           </div>
         )}
-
-        <SearchBar
-          onSearch={search}
-          onReset={reset}
-          isLoading={isLoading}
-          isIdle={isIdle}
-        />
+        <SearchBar onSearch={search} onReset={reset} isLoading={isLoading} isIdle={isIdle} />
       </section>
 
-      {/* Main content */}
       <main className="app-main">
         {isIdle && (
           <div className="idle-categories">
@@ -86,11 +50,7 @@ export default function App() {
               { icon: "📺", label: "TVs", hint: "300 models", q: "Show me all TVs" },
               { icon: "💻", label: "Laptops", hint: "300 models", q: "Show me all laptops" },
             ].map((c) => (
-              <button
-                key={c.label}
-                className="category-card"
-                onClick={() => search(c.q)}
-              >
+              <button key={c.label} className="category-card" onClick={() => search(c.q)}>
                 <span className="category-icon">{c.icon}</span>
                 <span className="category-label">{c.label}</span>
                 <span className="category-hint">{c.hint}</span>
@@ -103,7 +63,7 @@ export default function App() {
           <div className="loading-state">
             <div className="loading-orb" />
             <p>Analysing your query with AI...</p>
-            <span className="loading-hint">Catalog stays local — only your query is sent</span>
+            <span className="loading-hint">Powered by Groq · Llama 3</span>
           </div>
         )}
 
@@ -127,7 +87,7 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Catalog processed locally · AI query parsing via {credentials.provider === "claude" ? "Anthropic Claude" : "OpenAI GPT-4o"}</p>
+        <p>Catalog processed locally · AI query parsing via Groq · Llama 3</p>
       </footer>
     </div>
   );
