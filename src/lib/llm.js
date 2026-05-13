@@ -13,7 +13,7 @@ async function queryOpenAIAPI(apiKey, userQuery) {
 }
 
 async function queryGroqAPI(apiKey, userQuery) {
-  const r = await fetch("/api/groq", { method: "POST", headers: { "Content-Type": "application/json", "x-groq-key": apiKey }, body: JSON.stringify({ model: "llama3-8b-8192", max_tokens: 256, messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userQuery }], response_format: { type: "json_object" } }) });
+  const r = await fetch("/api/groq", { method: "POST", headers: { "Content-Type": "application/json", "x-groq-key": apiKey }, body: JSON.stringify({ model: "llama-3.1-8b-instant", max_tokens: 256, messages: [{ role: "system", content: SYSTEM_PROMPT }, { role: "user", content: userQuery }], response_format: { type: "json_object" } }) });
   if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e?.error?.message || "Groq error: " + r.status); }
   const d = await r.json(); return parseJSON(d.choices?.[0]?.message?.content || "");
 }
